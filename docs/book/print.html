@@ -1,0 +1,347 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Dlib PDFViewer</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = null;
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="pdfjs.html"><strong aria-hidden="true">1.</strong> Delve into PDF.js</a></li><li class="chapter-item expanded "><a href="example1.html"><strong aria-hidden="true">2.</strong> Examples</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Dlib PDFViewer</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pdfjs"><a class="header" href="#pdfjs">PDF.js</a></h1>
+<p>Learning PDF.js with examples. </p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>PDF.js has three layers.</p>
+<div class="table-wrapper"><table><thead><tr><th>Layer</th><th>Description</th></tr></thead><tbody>
+<tr><td>Core</td><td>The core layer is where a binary PDF is parsed and interpreted. This layer is the foundation for all subsequent layers. It is not documented here because using it directly is considered an advanced usage and the API is likely to change. For an example of using the core layer see the <a href="pdfobjectbrowser">PDF Object Browser</a>.</td></tr>
+<tr><td>Display</td><td>The display layer takes the core layer and exposes an easier to use API to render PDFs and get other information out of a document. This API is what the version number is based on.</td></tr>
+<tr><td>Viewer</td><td>The viewer is built on the display layer and is the UI for PDF viewer in Firefox and the other browser extensions within the project. It can be a good starting point for building your own viewer. However, we do ask if you plan to embed the viewer in your own site, that it not just be an unmodified version. Please re-skin it or build upon it.</td></tr>
+</tbody></table>
+</div>
+<h3 id="file-layout-overview"><a class="header" href="#file-layout-overview">File Layout Overview</a></h3>
+<h4 id="prebuilt"><a class="header" href="#prebuilt">Prebuilt</a></h4>
+<pre><code>├── build/
+│   ├── pdf.js                             - display layer
+│   ├── pdf.js.map                         - display layer's source map
+│   ├── pdf.worker.js                      - core layer
+│   └── pdf.worker.js.map                  - core layer's source map
+├── web/
+│   ├── cmaps/                             - character maps (required by core)
+│   ├── compressed.tracemonkey-pldi-09.pdf - PDF file for testing purposes
+│   ├── debugger.js                        - helpful debugging features
+│   ├── images/                            - images for the viewer and annotation icons
+│   ├── locale/                            - translation files
+│   ├── viewer.css                         - viewer style sheet
+│   ├── viewer.html                        - viewer layout
+│   ├── viewer.js                          - viewer layer
+│   └── viewer.js.map                      - viewer layer's source map
+└── LICENSE
+</code></pre>
+<h4 id="source"><a class="header" href="#source">Source</a></h4>
+<pre><code>├── docs/                                  - website source code
+├── examples/                              - simple usage examples
+├── extensions/                            - browser extension source code
+├── external/                              - third party code
+├── l10n/                                  - translation files
+├── src/
+│   ├── core/                              - core layer
+│   ├── display/                           - display layer
+│   ├── shared/                            - shared code between the core and display layers
+│   ├── interfaces.js                      - interface definitions for the core/display layers
+│   └── pdf.*.js                           - wrapper files for bundling
+├── test/                                  - unit, font, reference, and integration tests
+├── web/                                   - viewer layer
+├── LICENSE
+├── README.md
+├── gulpfile.js                            - build scripts/logic
+├── package-lock.json                      - pinned dependency versions
+└── package.json                           - package definition and dependencies
+</code></pre>
+<h2 id="the-viewer"><a class="header" href="#the-viewer">The Viewer</a></h2>
+<p>The web/viewer.html is a viewer that we can use to view pdfs. In the source, the web folder has lots of js files that can give us more about the PDF.js</p>
+<h2 id="pdfjs-examples"><a class="header" href="#pdfjs-examples">PDF.js examples</a></h2>
+<p>PDF.js heavily relies on the use of <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>.</p>
+<h3 id="document"><a class="header" href="#document">Document</a></h3>
+<p>The object structure of PDF.js loosely follows the structure of an actual PDF. At the top level there is a document object.</p>
+<p>The following code is to get a document.</p>
+<pre><code>pdfjsLib.getDocument('helloworld.pdf')
+</code></pre>
+<p>pdfjsLib is the core of PDF.js. The previous code uses promises should like the following:</p>
+<pre><code>var loadingTask = pdfjsLib.getDocument('helloworld.pdf');
+loadingTask.promise.then(function (pdf){
+    // then pdf can be used here.
+});
+</code></pre>
+<h3 id="page"><a class="header" href="#page">Page</a></h3>
+<p>Once we have the document, we can get a page.</p>
+<pre><code>pdf.getPage(1).then(function(page){
+    // page can be used here
+});
+
+#### Rendering the Page
+Each PDF page has its won viewport which defines the size in pixels (72DPI) and initial rotatioin. By default the viewport is scaled to the original size of the PDF, but this can be changed by modifying the viewport. When the viewport is created, an initial transformation matrix will also be created that takes into account the desired scale, rotation, and it transforms the coordinate system (the 0,0 point in PDF documents the bottom-left whereas canvas 0,0 is top-left).
+
+```javascript,editable
+var scale = 1.5;
+var viewport = page.getViewport({ scale: scale, });
+// Support HiDPI-screens.
+var outputScale = window.devicePixelRatio || 1;
+
+var canvas = document.getElementById('the-canvas');
+var context = canvas.getContext('2d');
+
+canvas.width = Math.floor(viewport.width * outputScale);
+canvas.height = Math.floor(viewport.height * outputScale);
+canvas.style.width = Math.floor(viewport.width) + &quot;px&quot;;
+canvas.style.height =  Math.floor(viewport.height) + &quot;px&quot;;
+
+var transform = outputScale !== 1
+  ? [outputScale, 0, 0, outputScale, 0, 0]
+  : null;
+
+var renderContext = {
+  canvasContext: context,
+  transform: transform,
+  viewport: viewport
+};
+page.render(renderContext);
+</code></pre>
+<h2 id="sources"><a class="header" href="#sources">Sources:</a></h2>
+<ul>
+<li>https://mozilla.github.io/pdf.js/examples/index.html#interactive-examples</li>
+<li>https://mozilla.github.io/pdf.js</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="pdfjs-examples-1"><a class="header" href="#pdfjs-examples-1">PDF.js examples</a></h1>
+<p>PDF.js heavily relies on the use of <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>.</p>
+<h3 id="document-1"><a class="header" href="#document-1">Document</a></h3>
+<p>The object structure of PDF.js loosely follows the structure of an actual PDF. At the top level there is a document object.</p>
+<p>The following code is to get a document.</p>
+<pre><code>pdfjsLib.getDocument('helloworld.pdf')
+</code></pre>
+<p>pdfjsLib is the core of PDF.js. The previous code uses promises should like the following:</p>
+<pre><code>var loadingTask = pdfjsLib.getDocument('helloworld.pdf');
+loadingTask.promise.then(function (pdf){
+    // then pdf can be used here.
+});
+</code></pre>
+<h3 id="page-1"><a class="header" href="#page-1">Page</a></h3>
+<p>Once we have the document, we can get a page.</p>
+<pre><code>pdf.getPage(1).then(function(page){
+    // page can be used here
+});
+
+#### Rendering the Page
+Each PDF page has its won viewport which defines the size in pixels (72DPI) and initial rotatioin. By default the viewport is scaled to the original size of the PDF, but this can be changed by modifying the viewport. When the viewport is created, an initial transformation matrix will also be created that takes into account the desired scale, rotation, and it transforms the coordinate system (the 0,0 point in PDF documents the bottom-left whereas canvas 0,0 is top-left).
+
+```javascript,editable
+var scale = 1.5;
+var viewport = page.getViewport({ scale: scale, });
+// Support HiDPI-screens.
+var outputScale = window.devicePixelRatio || 1;
+
+var canvas = document.getElementById('the-canvas');
+var context = canvas.getContext('2d');
+
+canvas.width = Math.floor(viewport.width * outputScale);
+canvas.height = Math.floor(viewport.height * outputScale);
+canvas.style.width = Math.floor(viewport.width) + &quot;px&quot;;
+canvas.style.height =  Math.floor(viewport.height) + &quot;px&quot;;
+
+var transform = outputScale !== 1
+  ? [outputScale, 0, 0, outputScale, 0, 0]
+  : null;
+
+var renderContext = {
+  canvasContext: context,
+  transform: transform,
+  viewport: viewport
+};
+page.render(renderContext);
+</code></pre>
+<h2 id="sources-1"><a class="header" href="#sources-1">Sources:</a></h2>
+<ul>
+<li>https://mozilla.github.io/pdf.js/examples/index.html#interactive-examples</li>
+<li>https://mozilla.github.io/pdf.js</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

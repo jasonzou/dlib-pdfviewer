@@ -1,13 +1,10 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@types/pdfjs-dist':
-    specifier: ^2.10.378
-    version: 2.10.378
   pdfjs-dist:
     specifier: ^3.7.107
     version: 3.7.107
@@ -384,16 +381,6 @@ packages:
       '@tauri-apps/cli-win32-ia32-msvc': 1.4.0
       '@tauri-apps/cli-win32-x64-msvc': 1.4.0
     dev: true
-
-  /@types/pdfjs-dist@2.10.378:
-    resolution: {integrity: sha512-TRdIPqdsvKmPla44kVy4jv5Nt5vjMfVjbIEke1CRULIrwKNRC4lIiZvNYDJvbUMNCFPNIUcOKhXTyMJrX18IMA==}
-    deprecated: This is a stub types definition. pdfjs-dist provides its own type definitions, so you do not need this installed.
-    dependencies:
-      pdfjs-dist: 3.7.107
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
 
   /@vitejs/plugin-vue@4.1.0(vite@4.3.9)(vue@3.2.47):
     resolution: {integrity: sha512-++9JOAFdcXI3lyer9UKUV4rfoQ3T1RN8yDqoCLar86s0xQct5yblxAE+yWgRnU5/0FOlVCpTZpYSBV/bGWrSrQ==}
