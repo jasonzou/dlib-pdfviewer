@@ -3,15 +3,16 @@
 
 // pub mod native;
 
-use tauri::Manager;
+use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{
-    AppHandle, CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
-    Window,
+    App, AppHandle, CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu,
+    SystemTrayMenuItem, Window,
 };
+use tauri::{Manager, WindowBuilder};
 
 fn main() {
     let open_main = CustomMenuItem::new("open_main".to_string(), "打开主界面");
-    let about = CustomMenuItem::new("about".to_string(), "About ...");
+    let about = CustomMenuItem::new("about".to_string(), "Show");
     let quit = CustomMenuItem::new("quit".to_string(), "Exit");
     let spotlight = CustomMenuItem::new("spotlight".to_string(), "System Information");
     let tray_menu = SystemTrayMenu::new()
@@ -23,28 +24,48 @@ fn main() {
         .add_item(quit);
     // insert the menu items here
     tauri::Builder::default()
-        .setup(|app| {
-            let splashscreen_window = app.get_window("splashscreen").unwrap();
-            let main_window = app.get_window("main").unwrap();
-            // we perform the initialization code on a new task so the app doesn't freeze
-            tauri::async_runtime::spawn(async move {
-                // initialize your app here instead of sleeping :)
-                println!("Initializing...");
-                std::thread::sleep(std::time::Duration::from_secs(2));
-                println!("Done initializing.");
-
-                // After it's done, close the splashscreen and display the main window
-                splashscreen_window.close().unwrap();
-                main_window.show().unwrap();
-            });
-            Ok(())
-        })
+        .manage(TrayWindowState(AtomicBool::new(true)))
+        // .setup(|app| {
+        //     let splashscreen_window = app.get_window("splashscreen").unwrap();
+        //     let main_window = app.get_window("main").unwrap();
+        //     // we perform the initialization code on a new task so the app doesn't freeze
+        //     tauri::async_runtime::spawn(async move {
+        //         // initialize your app here instead of sleeping :)
+        //         println!("Initializing...");
+        //         std::thread::sleep(std::time::Duration::from_secs(2));
+        //         println!("Done initializing.");
+        //         // After it's done, close the splashscreen and display the main window
+        //         splashscreen_window.close().unwrap();
+        //         main_window.show().unwrap();
+        //     });
+        //     Ok(())
+        // })
+        // .setup(|app| {
+        //     WindowBuilder::new(
+        //         app,
+        //         "about_window",
+        //         tauri::WindowUrl::App("about.html".into()),
+        //     )
+        //     .title("About ...")
+        //     .resizable(true)
+        //     .min_inner_size(1000.0, 500.0)
+        //     .max_inner_size(1200.0, 700.0)
+        //     .always_on_top(true)
+        //     .build()
+        //     .expect("failed to create the window");
+        //     Ok(())
+        // })
+        // .setup(close_splash_window)
         .system_tray(SystemTray::new().with_menu(tray_menu))
         .on_system_tray_event(system_tray_handler)
         .invoke_handler(tauri::generate_handler![])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[derive(Default)]
+struct TrayWindowState(AtomicBool);
+
 fn system_tray_handler(app: &AppHandle, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::MenuItemClick { id, .. } => {
@@ -73,7 +94,22 @@ fn system_tray_handler(app: &AppHandle, event: SystemTrayEvent) {
                     window.set_focus().unwrap();
                 }
 
-                "about" => {}
+                "about" => {
+                    let sl_state = app.state::<'_, TrayWindowState>();
+                    if !sl_state.0.load(Ordering::Relaxed) {
+                        let window = app.get_window("main").unwrap();
+                        item_handle.set_title("Hide").unwrap();
+                        window.show().unwrap();
+                        window.set_focus().unwrap();
+                        sl_state.0.fetch_or(true, Ordering::Relaxed);
+                    } else {
+                        let window = app.get_window("main").unwrap();
+                        window.hide().unwrap();
+                        // you can also `set_selected`, `set_enabled` and `set_native_image` (macOS only).
+                        item_handle.set_title("Show").unwrap();
+                        sl_state.0.fetch_and(false, Ordering::Relaxed);
+                    }
+                }
                 _ => {}
             }
         }
@@ -103,19 +139,20 @@ fn create_spotlight_window(app: &AppHandle) -> Window {
     return spotlight_window;
 }
 
-fn close_splash_window(app: &AppHandle) {
-    let splashscreen_window = app.get_window("splashscreen").unwrap();
-    let main_window = app.get_window("main").unwrap();
-    // we perform the initialization code on a new task so the app doesn't freeze
-    tauri::async_runtime::spawn(async move {
-        // initialize your app here instead of sleeping :)
-        println!("Initializing...");
-        std::thread::sleep(std::time::Duration::from_secs(2));
-        println!("Done initializing.");
+// fn close_splash_window(app: &mut App) -> Result<(), 'Error'> {
+//     let splashscreen_window = app.get_window("splashscreen").unwrap();
+//     let main_window = app.get_window("main").unwrap();
+//     // we perform the initialization code on a new task so the app doesn't freeze
+//     tauri::async_runtime::spawn(async move {
+//         // initialize your app here instead of sleeping :)
+//         println!("Initializing...");
+//         std::thread::sleep(std::time::Duration::from_secs(2));
+//         println!("Done initializing.");
 
-        // After it's done, close the splashscreen and display the main window
-        splashscreen_window.close().unwrap();
-        main_window.show().unwrap();
-    });
-    // Ok(());
-}
+//         // After it's done, close the splashscreen and display the main window
+//         splashscreen_window.close().unwrap();
+//         main_window.show().unwrap();
+//     });
+//     Ok(());
+
+// }
