@@ -9,8 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "@tauri-apps/api": "^1.4.0",
+    "@vueuse/core": "^10.2.0",
+    "element-plus": "^2.3.7",
     "pdfjs-dist": "^3.7.107",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
