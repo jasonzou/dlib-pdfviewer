@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+import PdfVue03 from './components/PdfViewer03.vue'
 </script>
 
 <template>
@@ -12,6 +13,9 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Dlib PDFViewer" />
+  <br />
+  <hr />
+  <PdfVue03 src="/test1.pdf"/>
 </template>
 
 <style scoped>

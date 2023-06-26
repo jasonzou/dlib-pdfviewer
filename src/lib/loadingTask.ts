@@ -1,5 +1,5 @@
 import * as pdfjsLib from "pdfjs-dist";
-import PDFJSWorker from "pdfjs-dist/build/pdf.worker.entry";
+import PDFJSWorker from "pdfjs-dist/build/pdf.worker?url";
 import {
   DocumentInitParameters,
   PDFDataRangeTransport,

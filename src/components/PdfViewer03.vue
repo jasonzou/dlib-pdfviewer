@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref} from "vue";
 import * as pdfjsLib from "pdfjs-dist";
-import PDFJSWorker from "pdfjs-dist/build/pdf.worker.entry";
-import pdfjsViewer from "pdfjs-dist/web/pdf_viewer";
+import PDFJSWorker from "pdfjs-dist/build/pdf.worker?url";
+import * as pdfjsViewer from "pdfjs-dist/web/pdf_viewer.js";
 import {
   PDFDocumentProxy,
   PDFPageProxy,
-} from "pdfjs-dist/types/src/display/api";
-import { PageViewport } from "pdfjs-dist/types/src/display/display_utils";
+} from "pdfjs-dist";
+import { PageViewport } from "pdfjs-dist";
 import { createLoadingTask } from "../lib/loadingTask.ts";
 import "pdfjs-dist/legacy/web/pdf_viewer.css";
 
@@ -54,15 +54,17 @@ const eventBus = ref(null);
 
 const pageNumber = computed(() => props.page || 1);
 
+const emits = defineEmits(['pdfLoaded', 'totalPages', 'textContent']) 
+
 const initPdfWorker = () => {
   loading.value = true;
   pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker;
   const loadingTask = createLoadingTask(props.src);
   loadingTask.promise.then((pdf: PDFDocumentProxy) => {
-    ctx.emit("pdfLoaded", pdf);
+    emits("pdfLoaded", pdf);
     thePDF.value = pdf;
     numberOfPages.value = pdf.numPages;
-    ctx.emit("totalPages", numberOfPages.value);
+    emits("totalPages", numberOfPages.value);
     if (pageNumber.value <= numberOfPages.value) {
       pdf
         .getPage(pageNumber.value)
@@ -210,10 +212,10 @@ const scaleCanvas = async (
           });
 
           // Set text-fragments
-          textLayer.setTextContent(textContent);
-          ctx.emit("textContent", textContent);
+          textLayer.setTextContentSource(textContent);
+          // emit("textContent", textContent);
           // Render text-fragments
-          textLayer.render();
+          textLayer.render(viewport);
         });
       }
 
