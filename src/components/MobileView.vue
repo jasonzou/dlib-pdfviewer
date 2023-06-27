@@ -51,14 +51,16 @@ import { DLIBViewer } from "../lib/dlib-viewer.ts";
 import { onMounted, ref, Ref } from "vue";
 
 // viewer containers
-const viewerContainer = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+const viewerContainer = ref<HTMLDivElement>();
 
-const viewer02 = ref(null);ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+const viewer02 = ref<HTMLDivElement>();
 
 
 let pdfapp: DLIBViewer;
 
 onMounted(async()=>{
+  console.log(viewer02.value)
+  console.log(viewer02)
   pdfapp = new DLIBViewer(
     viewer02.value as HTMLDivElement
   )

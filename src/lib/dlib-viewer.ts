@@ -31,6 +31,7 @@ class DLIBViewer {
   //peekManager: PeekManager;
 
   constructor(container: HTMLDivElement) {
+    console.log("1");
     const eventBus = new pdfjsViewer.EventBus();
 
     const linkService = new pdfjsViewer.PDFLinkService({
@@ -41,6 +42,7 @@ class DLIBViewer {
       eventBus,
       linkService: linkService,
     });
+    console.log("2");
 
     // l10n resource
     // ???TODO???
@@ -57,6 +59,7 @@ class DLIBViewer {
       useOnlyCssZoom: true,
       textLayerMode: 0, //disabled??
     });
+    console.log("3");
 
     // pdfLinkService default viewer
     linkService.setViewer(pdfViewer);
@@ -66,7 +69,8 @@ class DLIBViewer {
       linkService,
     });
     linkService.setHistory(history);
-
+    console.log("4");
+2
     this.container = container;
     this.eventBus = eventBus;
     this.pdfLinkService = linkService;
@@ -74,6 +78,7 @@ class DLIBViewer {
     this.pdfHistory = history;
     this.pdfViewer = pdfViewer; // pdfViewer configuration is done
 
+    console.log("5");
     // pdfjs internal event listeners
     eventBus.on("pagesinit", function () {
       // We can use pdfViewer now, e.g. let's change default scale.
