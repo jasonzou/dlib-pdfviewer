@@ -1,6 +1,6 @@
 <template>
-  <div id="viewerContainer">
-    <div id="viewer" class="pdfViewer"></div>
+  <div id="viewerContainer" ref="viewerContainer">
+    <div id="viewer" class="pdfViewer" ref="viewer02" style="position:absolute"></div>
   </div>
 
   <div id="loadingBar">
@@ -46,5 +46,23 @@
     <button class="toolbarButton zoomIn" title="Zoom In" id="zoomIn"></button>
   </footer>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { DLIBViewer } from "../lib/dlib-viewer.ts";
+import { onMounted, ref, Ref } from "vue";
+
+// viewer containers
+const viewerContainer = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+
+const viewer02 = ref(null);ref<HTMLDivElement>() as Ref<HTMLDivElement>;
+
+
+let pdfapp: DLIBViewer;
+
+onMounted(async()=>{
+  pdfapp = new DLIBViewer(
+    viewer02.value as HTMLDivElement
+  )
+  pdfapp.open('./test1.pdf');
+});
+</script>
 <style></style>

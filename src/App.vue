@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
 import PdfVue03 from './components/PdfViewer03.vue'
+import PdfVue04 from './components/PdfVue3.vue'
+import PdfVue05 from './components/PdfViewer05.vue'
+import PdfVue02 from './components/MobileView.vue'
 </script>
 
 <template>
@@ -12,10 +15,24 @@ import PdfVue03 from './components/PdfViewer03.vue'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
+  <h2>Viewer 01</h2>
   <HelloWorld msg="Dlib PDFViewer" />
   <br />
   <hr />
+  <h2>Viewer 02</h2>
+  <PdfVue02 /> 
+  <br />
+  <hr />
+  <h2>Viewer 03</h2>
   <PdfVue03 src="/test1.pdf"/>
+  <br />
+  <hr />
+  <h2>Viewer 04</h2>
+  <PdfVue04 src="/test1.pdf"/>
+  <br />
+  <hr />
+  <h2>Viewer 05</h2>
+  <PdfVue05 src="/test1.pdf"/>
 </template>
 
 <style scoped>

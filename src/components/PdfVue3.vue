@@ -2,14 +2,12 @@
 import {
   GlobalWorkerOptions,
   getDocument,
-} from "pdfjs-dist/legacy/build/pdf.min.js";
+} from "pdfjs-dist";
 import { ref, onMounted, onUnmounted, Ref, computed } from "vue";
-const workerSrc = new URL(
-  "../node_modules/pdfjs-dist/legacy/build/pdf.worker.min.js",
-  import.meta.url
-).href;
+import PDFJSWorker from "pdfjs-dist/build/pdf.worker?url";
 
-GlobalWorkerOptions.workerSrc = workerSrc;
+
+GlobalWorkerOptions.workerSrc = PDFJSWorker;
 const dpr = ref(1);
 
 const props = withDefaults(
@@ -297,31 +295,15 @@ const backToTop = () => {
       <div
         ref="scroller"
         class="pdf-vue3-scroller"
-        style="height: 100%; overflow-y: auto"
-        :style="{ maxHeight: `${viewportHeight}px` }"
         @scroll="handleScroll"
       >
         <div
           class="pdf-vue3-canvas-container"
           ref="container"
-          style="margin: 0 auto"
-          :style="{
-            width: isNaN(Number(props.pdfWidth))
-              ? props.pdfWidth
-              : `${props.pdfWidth}px`,
-          }"
+          
         >
           <canvas
-            style="
-              display: block;
-              box-shadow: #a9a9a9 0px 1px 3px 0px;
-              margin-left: auto;
-              margin-right: auto;
-              width: calc(100% - 4px);
-            "
-            :style="{
-              marginBottom: `${rowGap}px`,
-            }"
+  
             v-for="item in totalPages"
             :key="item"
             :ref="canvasRefs[item - 1]"
@@ -332,37 +314,18 @@ const backToTop = () => {
     <div
       class="pdf-vue3-progress"
       v-if="props.showProgress"
-      style="
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        user-select: none;
-        pointer-events: none;
-      "
+    
     >
       <slot v-if="slots.progress" name="progress" :loadRatio="loadRatio"></slot>
       <div
         v-else
-        style="width: 0%; height: 4px; transition: all 0.2s"
-        :style="{
-          width: `${loadRatio}%`,
-          opacity: loadRatio < 100 ? '1' : '0',
-          backgroundColor: props.progressColor,
-        }"
+       
       ></div>
     </div>
     <div
       class="pdf-vue3-pageTooltip"
       v-if="props.showPageTooltip"
-      style="
-        position: absolute;
-        left: 12px;
-        top: 12px;
-        width: calc(100% - 12px);
-        user-select: none;
-        pointer-events: none;
-      "
+      
     >
       <slot
         v-if="slots.pageTooltip"
@@ -372,16 +335,7 @@ const backToTop = () => {
       ></slot>
       <div
         v-else
-        style="
-          padding: 4px 8px;
-          background: rgba(0, 0, 0, 0.5);
-          color: #ffffff;
-          font-size: 16px;
-          border-radius: 6px;
-          display: inline-block;
-          transition: opacity 0.3s;
-        "
-        :style="{ opacity: isScrolling && totalPages > 0 ? '1' : '0' }"
+        
       >
         {{ currentPage }}/{{ totalPages }}
       </div>
@@ -390,21 +344,7 @@ const backToTop = () => {
       class="pdf-vue3-backToTopBtn"
       v-if="props.showBackToTopBtn"
       @click="backToTop"
-      style="
-        position: absolute;
-        right: 16px;
-        bottom: 16px;
-        display: inline-block;
-        user-select: none;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s;
-      "
-      :style="
-        scrollOffset > props.scrollThreshold
-          ? { opacity: '1', pointerEvents: 'initial' }
-          : undefined
-      "
+    
     >
       <slot
         v-if="slots.backToTopBtn"
@@ -413,17 +353,7 @@ const backToTop = () => {
       ></slot>
       <div
         v-else
-        style="
-          width: 50px;
-          height: 50px;
-          background: rgba(0, 0, 0, 0.4);
-          color: #ffffff;
-          font-size: 16px;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
+      
       >
         <svg
           width="24"

@@ -102,6 +102,9 @@ class DLIBViewer {
    *                      is opened.
    */
   public open(url: string) {
+    console.log('-----------------------------')
+    console.log(url)
+    console.log('-----------------------------')
     if (this.pdfLoadingTask) {
       // We need to destroy already opened document
       return this.close().then(
@@ -112,6 +115,7 @@ class DLIBViewer {
       );
     }
 
+    console.log("++++++++++++++++++++++++++++++")
     this.setTitleUsingUrl(url);
 
     // Loading document.
@@ -249,7 +253,7 @@ class DLIBViewer {
 
       // if (!pdfTitle && info && info.Title) {
       //   pdfTitle = info.Title;
-      // }
+    // }
     });
   }
 
@@ -280,3 +284,5 @@ class DLIBViewer {
     this.pdfViewer.currentPageNumber = val;
   }
 }
+
+export { DLIBViewer }
