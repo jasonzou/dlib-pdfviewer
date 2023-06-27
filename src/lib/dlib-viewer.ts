@@ -7,54 +7,75 @@
 import * as pdfjsLib from "pdfjs-dist";
 import { UnknownErrorException } from "pdfjs-dist/types/src/shared/util";
 import * as pdfjsViewer from "pdfjs-dist/web/pdf_viewer";
+import {
+  PDFDocumentProxy,
+  PDFPageProxy,
+  PDFDocumentLoadingTask
+} from "pdfjs-dist";
+import {
+  DefaultAnnotationLayerFactory,
+  DefaultTextLayerFactory,
+  PDFFindController,
+  PDFLinkService,
+  PDFPageView,
+  EventBus,
+  PDFHistory,
+  PDFViewer
+} from "pdfjs-dist/web/pdf_viewer.js";
 
 //??TODO??
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "../../node_modules/pdfjs-dist/build/pdf.worker.js";
 const CMAP_PACKED = true;
 const CMAP_URL = "../../node_modules/pdfjs-dist/cmaps/";
 const MAX_IMAGE_SIZE = 1024 * 1024;
 
 class DLIBViewer {
-  pdfLoadingTask: pdfjsLib.PDFDocumentLoadingTask | undefined;
-  pdfDocument: pdfjsLib.PDFDocumentProxy | undefined;
-  pdfViewer: pdfjsViewer.PDFViewer;
-  pdfHistory: pdfjsViewer.PDFHistory;
-  pdfLinkService: pdfjsViewer.PDFLinkService;
-  eventBus: pdfjsViewer.EventBus;
+  pdfLoadingTask: PDFDocumentLoadingTask | undefined;
+  pdfDocument: PDFDocumentProxy | undefined;
+  pdfViewer: PDFViewer;
+  pdfHistory: PDFHistory;
+  pdfLinkService: PDFLinkService;
+  eventBus: EventBus;
   // l10n: typeof pdfjsViewer.GenericL10n;
 
   // other customization
   container: HTMLDivElement;
+  canvas: HTMLCanvasElement;
   //peekContainer: HTMLDivElement;
-  pdfFindController: pdfjsViewer.PDFFindController;
+  pdfFindController: PDFFindController;
   //peekManager: PeekManager;
 
-  constructor(container: HTMLDivElement) {
+  constructor(container: HTMLDivElement, canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+    this.container = container;
     console.log("1");
-    const eventBus = new pdfjsViewer.EventBus();
+    console.log(this.canvas);
+    const eventBus = new EventBus();
 
-    const linkService = new pdfjsViewer.PDFLinkService({
+    const linkService = new PDFLinkService({
       eventBus,
     });
 
-    const findController = new pdfjsViewer.PDFFindController({
+    const findController = new PDFFindController({
       eventBus,
       linkService: linkService,
     });
     console.log("2");
+    console.log("2-------------------------------");
+    console.log(container);
+    console.log(container.firstChild);
+    console.log("2===============================");
 
     // l10n resource
     // ???TODO???
     // this.l10n = pdfjsViewer.NullL10n;
 
     // pdf viewer
-    const pdfViewer = new pdfjsViewer.PDFViewer({
+    const pdfViewer = new PDFViewer({
       container,
       eventBus: eventBus,
       linkService: linkService,
       findController: findController,
-      annotationEditorMode: pdfjsLib.AnnotationEditorType.NONE,
+      //annotationEditorMode: AnnotationEditorType.NONE,
       // l10n: thisl10n,
       useOnlyCssZoom: true,
       textLayerMode: 0, //disabled??
@@ -64,13 +85,13 @@ class DLIBViewer {
     // pdfLinkService default viewer
     linkService.setViewer(pdfViewer);
 
-    const history = new pdfjsViewer.PDFHistory({
+    const history = new PDFHistory({
       eventBus,
       linkService,
     });
     linkService.setHistory(history);
     console.log("4");
-2
+    2
     this.container = container;
     this.eventBus = eventBus;
     this.pdfLinkService = linkService;
@@ -107,92 +128,75 @@ class DLIBViewer {
    *                      is opened.
    */
   public open(url: string) {
-    console.log('-----------------------------')
+    console.log('----------------open 1-------------')
     console.log(url)
-    console.log('-----------------------------')
+    console.log('----------------open 2-------------')
     if (this.pdfLoadingTask) {
       // We need to destroy already opened document
-      return this.close().then(
-        function () {
-          // ... and repeat the open() call.
-          return this.open(url);
-        }.bind(this)
-      );
+      // return this.close().then(
+      //   function () {
+      //     // ... and repeat the open() call.
+      //     return this.open(url);
+      //   }.bind(this)
+      // );
     }
 
     console.log("++++++++++++++++++++++++++++++")
-    this.setTitleUsingUrl(url);
+    //this.setTitleUsingUrl(url);
 
     // Loading document.
     const loadingTask = pdfjsLib.getDocument({
       url,
       maxImageSize: MAX_IMAGE_SIZE,
-      cMapUrl: CMAP_URL,
-      cMapPacked: CMAP_PACKED,
+      //cMapUrl: CMAP_URL,
+      //cMapPacked: CMAP_PACKED,
     });
     this.pdfLoadingTask = loadingTask;
+    console.log("+++++++++++++++++++ iiiiii +++++++++++")
+    console.log(this.pdfLoadingTask);
 
     // ??TODO?? progressData
     // this.pdfLoadingTask.onProgress = function (progressData) {
     //   self.progress(progressData.loaded / progressData.total);
     // };
 
-    return this.pdfLoadingTask.promise.then(
-      function (pdfDocument) {
-        // Document loaded, specifying document for the viewer.
-        this.pdfDocument = pdfDocument;
-        this.pdfViewer.setDocument(pdfDocument);
-        this.pdfLinkService.setDocument(pdfDocument);
-        this.pdfHistory.initialize({
-          fingerprint: pdfDocument.fingerprints[0],
+    this.pdfLoadingTask.promise.then(
+      function (pdf) {
+
+        // Fetch the first page
+        var pageNumber = 1;
+        pdf.getPage(pageNumber).then(function (page) {
+          console.log('Page loaded');
+
+          var scale = 1.5;
+          var viewport = page.getViewport({ scale: scale });
+          console.log(this.canvas);
+          console.log("000000i0000000000 canvas")
+
+          // Prepare canvas using PDF page dimensions
+          var context = this.canvas.getContext('2d');
+          this.canvas.height = viewport.height;
+          this.canvas.width = viewport.width;
+
+          // Render PDF page into canvas context
+          var renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          var renderTask = page.render(renderContext);
+          renderTask.promise.then(function () {
+            console.log('Page rendered');
+          });
         });
-
-        this.loadingBar.hide();
-        this.setTitleUsingMetadata(pdfDocument);
-      },
-      function (exception: UnknownErrorException) {
-        const message = exception && exception.message;
-        const l10n = this.l10n;
-        let loadingErrorMessage;
-
-        if (exception instanceof pdfjsLib.InvalidPDFException) {
-          // change error message also for other builds
-          loadingErrorMessage = this.l10n.get(
-            "invalid_file_error",
-            null,
-            "Invalid or corrupted PDF file."
-          );
-        } else if (exception instanceof pdfjsLib.MissingPDFException) {
-          // special message for missing PDFs
-          loadingErrorMessage = this.l10n.get(
-            "missing_file_error",
-            null,
-            "Missing PDF file."
-          );
-        } else if (exception instanceof pdfjsLib.UnexpectedResponseException) {
-          loadingErrorMessage = this.l10n.get(
-            "unexpected_response_error",
-            null,
-            "Unexpected server response."
-          );
-        } else {
-          loadingErrorMessage = this.l10n.get(
-            "loading_error",
-            null,
-            "An error occurred while loading the PDF."
-          );
-        }
-
-        console.log(loadingErrorMessage);
       }
     );
   }
 
-  /**
-   * Closes opened PDF document.
-   * @returns {Promise} - Returns the promise, which is resolved when all
-   *                      destruction is completed.
-   */
+  /*
+    * Closes opened PDF document.
+    * @returns { Promise } - Returns the promise, which is resolved when all
+    * destruction is completed.
+    */
   public close(): Promise<void> {
     // const errorWrapper = document.getElementById("errorWrapper");
     // errorWrapper.hidden = true;
@@ -214,7 +218,6 @@ class DLIBViewer {
         this.pdfHistory.reset();
       }
     }
-
     return promise;
   }
 
@@ -238,10 +241,10 @@ class DLIBViewer {
       // Provides some basic debug information
       console.log(
         "PDF " +
-          this.pdfDocument.fingerprints[0] +
-          " (PDF.js: " +
-          (pdfjsLib.version || "-") +
-          ")"
+        this.pdfDocument.fingerprints[0] +
+        " (PDF.js: " +
+        (pdfjsLib.version || "-") +
+        ")"
       );
 
       console.log(info, metadata);
@@ -258,7 +261,7 @@ class DLIBViewer {
 
       // if (!pdfTitle && info && info.Title) {
       //   pdfTitle = info.Title;
-    // }
+      // }
     });
   }
 
