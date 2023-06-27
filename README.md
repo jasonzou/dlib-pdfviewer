@@ -2,7 +2,7 @@
 A pdfviewer desktop application using PDF.js
 
 ## Canvas in PDF.js
-- use canvas
+- use canvas ??
 
 ## Other pdf viewers
 - research helper
