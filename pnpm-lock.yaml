@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   '@element-plus/icons-vue':
@@ -30,9 +34,6 @@ devDependencies:
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
     version: 4.2.3(vite@4.3.9)(vue@3.3.4)
-  sacc:
-    specifier: ^0.0.1
-    version: 0.0.1
   sass:
     specifier: ^1.63.6
     version: 1.63.6
@@ -1240,10 +1241,6 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sacc@0.0.1:
-    resolution: {integrity: sha512-0M6saaaCfZkOCcdy+/YEm9KYQMIXpdZ6br/0qvWVmr7Z8AlZ/YivQPX2yNxVP0sRK3kUGXu0M5vWzTT5LlBs/A==}
-    dev: true
-
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
     dev: false
@@ -1477,7 +1474,3 @@ packages:
 
   /yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

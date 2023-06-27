@@ -69,7 +69,7 @@
   </footer>
 </template>
 <script setup lang="ts">
-import { DLIBViewer } from "../lib/dlib-viewer.ts";
+import { PDFApplication } from "../lib/dlib-viewer.ts";
 import { onMounted, ref, Ref } from "vue";
 import { PDFViewer } from "pdfjs-dist/web/pdf_viewer.js";
 import * as pdfjsLib from "pdfjs-dist";
@@ -84,13 +84,12 @@ const viewerContainer = ref<HTMLDivElement>();
 const viewerCanvas = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>;
 const viewer = ref<HTMLDivElement>();
 
-let pdfapp: DLIBViewer;
+let pdfapp: PDFApplication;
 
 onMounted(async () => {
   console.log(viewerCanvas);
-  pdfapp = new DLIBViewer(viewerContainer.value, viewerCanvas.value);
-  await pdfapp.open("/test.pdf");
+  pdfapp = new PDFApplication(viewerContainer.value);
+  pdfapp.loadPDF("/test.pdf");
 });
 </script>
 <style></style>
-../lib/dlib-viewer-01.ts
