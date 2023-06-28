@@ -29,7 +29,7 @@ class ReaderInstance {
 		this.annotationItemIDs = [];
 		this.onChangeSidebarWidth = null;
 		this.state = null;
-		this._instanceID = Zotero.Utilities.randomString();
+		// this._instanceID = Zotero.Utilities.randomString();
 		this._window = null;
 		this._iframeWindow = null;
 		this._itemID = null;
@@ -55,41 +55,41 @@ class ReaderInstance {
 		return state ? JSON.parse(JSON.stringify(state)) : undefined;
 	}
 
-	async migrateMendeleyColors(libraryID, annotations) {
-		let colorMap = new Map();
-		colorMap.set('#fff5ad', '#ffd400');
-		colorMap.set('#ffb5b6', '#ff6666');
-		colorMap.set('#bae2ff', '#2ea8e5');
-		colorMap.set('#d3c2ff', '#a28ae5');
-		colorMap.set('#dcffb0', '#5fb236');
-		let updatedAnnotations = [];
-		for (let annotation of annotations) {
-			let color = colorMap.get(annotation.color);
-			if (color) {
-				annotation.color = color;
-				updatedAnnotations.push(annotation);
-			}
-		}
-		if (!updatedAnnotations.length) {
-			return false;
-		}
-		Zotero.debug('Migrating Mendeley colors');
-		let notifierQueue = new Zotero.Notifier.Queue();
-		try {
-			for (let annotation of updatedAnnotations) {
-				let { id: key, color } = annotation;
-				let item = Zotero.Items.getByLibraryAndKey(libraryID, key);
-				if (item && item.isEditable()) {
-					item.annotationColor = color;
-					await item.saveTx({ skipDateModifiedUpdate: true, notifierQueue });
-				}
-			}
-		}
-		finally {
-			await Zotero.Notifier.commit(notifierQueue);
-		}
-		return true;
-	}
+	// async migrateMendeleyColors(libraryID, annotations) {
+	// 	let colorMap = new Map();
+	// 	colorMap.set('#fff5ad', '#ffd400');
+	// 	colorMap.set('#ffb5b6', '#ff6666');
+	// 	colorMap.set('#bae2ff', '#2ea8e5');
+	// 	colorMap.set('#d3c2ff', '#a28ae5');
+	// 	colorMap.set('#dcffb0', '#5fb236');
+	// 	let updatedAnnotations = [];
+	// 	for (let annotation of annotations) {
+	// 		let color = colorMap.get(annotation.color);
+	// 		if (color) {
+	// 			annotation.color = color;
+	// 			updatedAnnotations.push(annotation);
+	// 		}
+	// 	}
+	// 	if (!updatedAnnotations.length) {
+	// 		return false;
+	// 	}
+	// 	Zotero.debug('Migrating Mendeley colors');
+	// 	let notifierQueue = new Zotero.Notifier.Queue();
+	// 	try {
+	// 		for (let annotation of updatedAnnotations) {
+	// 			let { id: key, color } = annotation;
+	// 			let item = Zotero.Items.getByLibraryAndKey(libraryID, key);
+	// 			if (item && item.isEditable()) {
+	// 				item.annotationColor = color;
+	// 				await item.saveTx({ skipDateModifiedUpdate: true, notifierQueue });
+	// 			}
+	// 		}
+	// 	}
+	// 	finally {
+	// 		await Zotero.Notifier.commit(notifierQueue);
+	// 	}
+	// 	return true;
+	// }
 
 	async open({ itemID, state, location, secondViewState }) {
 		let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);

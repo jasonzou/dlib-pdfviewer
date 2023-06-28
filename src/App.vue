@@ -4,6 +4,7 @@ import PdfVue03 from "./components/PdfViewer03.vue";
 import PdfVue04 from "./components/PdfVue3.vue";
 import PdfVue05 from "./components/PdfViewer05.vue";
 import PdfVue02 from "./components/MobileView02.vue";
+import PdfVue06 from "./components/MobileView03.vue";
 </script>
 
 <template>
@@ -20,7 +21,7 @@ import PdfVue02 from "./components/MobileView02.vue";
   <br />
   <hr />
   <h2>Viewer 02</h2>
-  <PdfVue02 />
+  <!-- <PdfVue02 /> -->
   <br />
   <hr />
   <h2>Viewer 03</h2>
@@ -33,6 +34,10 @@ import PdfVue02 from "./components/MobileView02.vue";
   <hr />
   <h2>Viewer 05</h2>
   <!-- <PdfVue05 src="/test1.pdf"/> -->
+  <br />
+  <hr />
+  <h2>Viewer 06</h2>
+  <PdfVue06 src="/test1.pdf"/>
 </template>
 
 <style scoped>
