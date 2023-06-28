@@ -1,21 +1,5 @@
 <template>
-  <div
-    id="viewerContainer"
-    ref="viewerContainer"
-    style="background-color: black; position: absolute"
-  >
-    <div id="viewer" class="pdfViewer" ref="viewer">
-  <iframe>
-      <!-- <canvas
-        id="canvas"
-        ref="viewerCanvas"
-        dir="ltr"
-        style="display: block"
-        role="main"
-      /> -->
-  </iframe>
-    </div>
-  </div>
+  <iframe :src="iframeSrc" width="600px" height="900px"> </iframe>
 
   <div id="loadingBar">
     <div class="progress"></div>
@@ -80,18 +64,11 @@ import { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker;
 
-// viewer containers
-const viewerContainer = ref<HTMLDivElement>();
-
-const viewerCanvas = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>;
-const viewer = ref<HTMLDivElement>();
-
-let pdfapp: PDFApplication;
+const iframeSrc = ref("");
 
 onMounted(async () => {
-  console.log(viewerCanvas);
-  pdfapp = new PDFApplication(viewerContainer.value);
-  pdfapp.loadPDF("/test.pdf");
+  // pdfapp = new PDFApplication(viewerContainer.value);
+  iframeSrc.value = "/viewer.html?file=http://192.168.77.129:3333/test.pdf";
 });
 </script>
 <style></style>
